@@ -25,3 +25,6 @@ psql -U DB_USER -d DB_NAME -a -f file_name
 ```
 
 This is all you need to do, now you can use RYG API to start developing your game critic site.
+
+## License
+RYG is available under the MIT license. See the [LICENSE](./LICENSE) file for more info.
