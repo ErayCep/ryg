@@ -49,7 +49,7 @@ func (s *Storage) GetGames() (model.Games, error) {
 
 func (s *Storage) AddGame(game *model.Game) (int64, error) {
 	var id int64
-	err := s.DB.QueryRow("INSERT INTO games (title, genre, releaseDate, price) VALUES ($1, $2, $3, $4) RETURNING id;", game.Title, game.Genre, game.ReleaseDate, game.Price).Scan(&id)
+	err := s.DB.QueryRow("INSERT INTO games (title, genre, releaseDate, price) VALUES ($1, $2, $3, $4) RETURNING game_id;", game.Title, game.Genre, game.ReleaseDate, game.Price).Scan(&id)
 	if err != nil {
 		log.Fatal(err)
 		return -1, err
@@ -59,7 +59,7 @@ func (s *Storage) AddGame(game *model.Game) (int64, error) {
 }
 
 func (s *Storage) UpdateGame(game *model.Game, id int) error {
-	err := s.DB.QueryRow("UPDATE games SET title = $1, genre = $2, releaseDate = $3, price = $4 WHERE id = $5", game.Title, game.Genre, game.ReleaseDate, game.Price, id).Scan(&id)
+	err := s.DB.QueryRow("UPDATE games SET title = $1, genre = $2, releaseDate = $3, price = $4 WHERE game_id = $5", game.Title, game.Genre, game.ReleaseDate, game.Price, id).Scan(&id)
 	if err != nil {
 		log.Fatal(err)
 		return err
@@ -69,7 +69,7 @@ func (s *Storage) UpdateGame(game *model.Game, id int) error {
 }
 
 func (s *Storage) DeleteGame(id int) error {
-	_, err := s.DB.Exec("DELETE FROM games WHERE id = $1", id)
+	_, err := s.DB.Exec("DELETE FROM games WHERE game_id = $1", id)
 	if err != nil {
 		log.Fatal(err)
 		return err

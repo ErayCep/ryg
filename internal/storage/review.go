@@ -57,3 +57,23 @@ func (s *Storage) AddReview(review *model.Review) (sql.Result, error) {
 
 	return res, nil
 }
+
+func (s *Storage) UpdateReview(review *model.Review, id int) error {
+	err := s.DB.QueryRow("UPDATE reviews SET game_id = $1, rating = $2, description = $3, created_at = $4, updated_at = $5 WHERE id = $6", review.Game_ID, review.Rating, review.Description, review.Base.CreatedAt, review.Base.UpdatedAt, id).Scan(&id)
+	if err != nil {
+		log.Fatal(err)
+		return err
+	}
+
+	return nil
+}
+
+func (s *Storage) DeleteReview(id int) error {
+	_, err := s.DB.Exec("DELETE FROM reviews WHERE review_id = $1", id)
+	if err != nil {
+		log.Fatal(err)
+		return err
+	}
+
+	return nil
+}

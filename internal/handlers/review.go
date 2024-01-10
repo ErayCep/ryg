@@ -42,13 +42,47 @@ func (h *Handlers) GetReviewHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handlers) PostReviewHandler(w http.ResponseWriter, r *http.Request) {
+	h.l.Printf("[INFO] POST review handler")
 
+	review := model.Review{}
+	err := review.FromJSON(r.Body)
+	if err != nil {
+		h.l.Printf("[ERROR] FromJSON failed")
+		http.Error(w, "Unable to decode json", http.StatusInternalServerError)
+	}
+
+	h.Storage.AddReview(&review)
 }
 
 func (h *Handlers) PutReviewHandler(w http.ResponseWriter, r *http.Request) {
+	h.l.Printf("[INFO] PUT review handler")
+	vars := mux.Vars(r)
+	id, err := strconv.Atoi(vars["id"])
+	if err != nil {
+		h.l.Printf("[ERROR] Failed to get review ID from request")
+		http.Error(w, "Unable to retrive ID", http.StatusBadRequest)
+	}
 
+	review := model.Review{}
+	err = review.FromJSON(r.Body)
+	if err != nil {
+		h.l.Printf("[ERROR] FromJSON failed")
+		http.Error(w, "Unable to decode json", http.StatusInternalServerError)
+	}
+
+	h.Storage.UpdateReview(&review, id)
 }
 
 func (h *Handlers) DeleteGameHandler(w http.ResponseWriter, r *http.Request) {
+	h.l.Printf("[INFO] DELETE review handler")
 
+	vars := mux.Vars(r)
+	id, err := strconv.Atoi(vars["id"])
+
+	if err != nil {
+		h.l.Printf("[ERROR] Failed to get review ID from request body")
+		http.Error(w, "Unable to decode json", http.StatusInternalServerError)
+	}
+
+	h.Storage.DeleteReview(id)
 }
